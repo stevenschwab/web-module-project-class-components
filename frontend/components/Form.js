@@ -2,9 +2,10 @@ import React from 'react'
 
 export default class Form extends React.Component {
   render() {
+    const { addTodo, todoName, handleChanges } = this.props
     return (
-      <form onSubmit={this.props.addTodo}>
-        <input type='text' name='todo' value={this.props.todoName} placeholder='Type todo' onChange={this.props.handleChanges}/>
+      <form onSubmit={addTodo}>
+        <input type='text' name='todo' value={todoName} placeholder='Type todo' onChange={handleChanges}/>
         <button type='submit'>Submit</button>
       </form>
     )

@@ -14,17 +14,25 @@ export default class App extends React.Component {
 
   handleChanges = e => {
     e.preventDefault();
-    this.setState({...this.state, todoName: e.target.value});
+    this.setState({
+      ...this.state, 
+      todoName: e.target.value
+    });
   }
 
   addTodo = e => {
     e.preventDefault();
+    const { todoName, todos } = this.state;
     const newTodo = {
-      name: this.state.todoName,
+      name: todoName,
       id: Date.now(),
       completed: false
     }
-    this.setState({...this.state, todos: [...this.state.todos, newTodo], todoName: ''});
+    this.setState({
+      ...this.state, 
+      todos: [...todos, newTodo], 
+      todoName: ''
+    });
   }
 
   filterTodos = () => {
@@ -32,15 +40,16 @@ export default class App extends React.Component {
   }
 
   toggleTodo = todoId => {
-    this.setState({...this.state, todos: this.state.todos.map(todo => {
-      if (todo.id === todoId) {
-        return {...todo, completed: !todo.completed}
-      }
+    this.setState({...this.state, 
+      todos: this.state.todos.map(todo => {
+      if (todo.id === todoId) return {...todo, completed: !todo.completed}
       return todo;
-    })})
+      })
+    })
   }
 
   render() {
+    const { todoName, showingCompleted } = this.state;
     const filteredTodos = this.state.showingCompleted
       ? this.state.todos
       : this.state.todos.filter(todo => !todo.completed);
@@ -48,8 +57,8 @@ export default class App extends React.Component {
     return (
       <div>
         <TodoList todos={filteredTodos} toggleTodo={this.toggleTodo} />
-        <Form handleChanges={this.handleChanges} todoName={this.state.todoName} addTodo={this.addTodo} />
-        <button onClick={this.filterTodos}>{this.state.showingCompleted ? "Hide" : "Show"} Completed</button>
+        <Form handleChanges={this.handleChanges} todoName={todoName} addTodo={this.addTodo} />
+        <button onClick={this.filterTodos}>{showingCompleted ? "Hide" : "Show"} Completed</button>
       </div>
     )
   }
