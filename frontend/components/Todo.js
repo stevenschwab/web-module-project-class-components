@@ -5,7 +5,7 @@ export default class Todo extends React.Component {
     return (
       <li className='todo' onClick={() => this.props.toggleTodo(this.props.todo.id)}>
         {this.props.todo.name}
-        <span className="checkmark" hidden={!this.props.todo.completed}>✓</span>
+        {this.props.todo.completed && <span className="checkmark">✓</span>}
       </li>
     )
   }
