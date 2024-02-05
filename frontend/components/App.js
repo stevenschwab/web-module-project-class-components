@@ -6,61 +6,49 @@ export default class App extends React.Component {
   constructor() {
     super()
     this.state = {
-      todos: [
-        {
-          name: 'Walk the dog',
-          id: 1528817077286, // could look different, you could use a timestamp to generate it
-          completed: true
-        },
-        {
-          name: 'Learn React',
-          id: 1528817084358,
-          completed: false
-        },
-        {
-          name: 'Have fun',
-          id: 1528817084359,
-          completed: false
-        }
-      ],
-      newToDo: {
-        name: '',
-        id: new Date().getTime(),
-        completed: false
-      },
+      todos: [],
+      todoName: '',
       showingCompleted: true
     }
   }
 
-  updateTodoName = (e) => {
-    this.setState({ newToDo: { name: e.target.value } })
+  handleChanges = e => {
+    e.preventDefault();
+    this.setState({...this.state, todoName: e.target.value});
   }
 
-  addTodo = () => {
-    this.setState({ todos: [...this.state.todos, this.state.newToDo] });
-    // this.setState({ newToDo: { name: '' }});
+  addTodo = e => {
+    e.preventDefault();
+    const newTodo = {
+      name: this.state.todoName,
+      id: Date.now(),
+      completed: false
+    }
+    this.setState({...this.state, todos: [...this.state.todos, newTodo], todoName: ''});
   }
 
   filterTodos = () => {
-    this.setState({ 
-      showingCompleted: !this.state.showingCompleted,
-      todos: this.state.todos.filter(todo => {
-        this.state.showingCompleted ? todo : !todo.completed
-      })
-    });
+    this.setState({...this.state, showingCompleted: !this.state.showingCompleted})
   }
 
-  // toggleCompleted = (e) => {
-  //   this.setState({ todos: this.state.todos.map(todo => {
-  //     (todo.id === e.target.key) ? todo.completed === !todo.completed : todo
-  //   })})
-  // }
+  toggleTodo = todoId => {
+    this.setState({...this.state, todos: this.state.todos.map(todo => {
+      if (todo.id === todoId) {
+        return {...todo, completed: !todo.completed}
+      }
+      return todo;
+    })})
+  }
 
   render() {
+    const filteredTodos = this.state.showingCompleted
+      ? this.state.todos
+      : this.state.todos.filter(todo => !todo.completed);
+    
     return (
       <div>
-        <TodoList todos={this.state.todos} toggleCompleted={this.toggleCompleted} />
-        <Form updateTodoName={this.updateTodoName} todoName={this.state.newToDo.name} addTodo={this.addTodo} />
+        <TodoList todos={filteredTodos} toggleTodo={this.toggleTodo} />
+        <Form handleChanges={this.handleChanges} todoName={this.state.todoName} addTodo={this.addTodo} />
         <button onClick={this.filterTodos}>{this.state.showingCompleted ? "Hide" : "Show"} Completed</button>
       </div>
     )
